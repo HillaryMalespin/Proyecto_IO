@@ -1,0 +1,35 @@
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.vite/
+coverage/
+npm-debug.log*
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de entrega generados
+entrega.zip
+*.zip
