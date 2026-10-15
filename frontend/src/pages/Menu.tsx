@@ -35,7 +35,7 @@ export default function Menu() {
       <header className="cabecera">
         <TablaDP />
         <div className="titulos">
-          <h1>Programación Dinámica</h1>
+          <h1><span>Programación Dinámica</span></h1>
           <p className="subtitulo">Elija el problema que desea resolver.</p>
         </div>
         <p className={`estado estado-${estado}`} role="status">
