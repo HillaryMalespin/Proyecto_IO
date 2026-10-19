@@ -1,0 +1,10 @@
+{
+  "algoritmo": "mochila",
+  "variante": "no-acotada",
+  "capacidad": 10,
+  "objetos": [
+    { "nombre": "Cuerda", "peso": 3, "valor": 4 },
+    { "nombre": "Pan", "peso": 4, "valor": 5 },
+    { "nombre": "Manta", "peso": 5, "valor": 7 }
+  ]
+}

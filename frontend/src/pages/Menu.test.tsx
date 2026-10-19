@@ -28,9 +28,15 @@ describe('Menú principal', () => {
     expect(await screen.findByText(/servicio no disponible/i)).toBeInTheDocument()
   })
 
-  it('alerta si el algoritmo no está disponible', () => {
+    it('alerta si el algoritmo no está disponible', () => {
+    montar()
+    fireEvent.click(screen.getByText('Series Deportivas'))
+    expect(screen.getByRole('alert')).toHaveTextContent(/no está disponible/i)
+  })
+
+  it('la mochila ya está disponible: no muestra alerta al abrirla', () => {
     montar()
     fireEvent.click(screen.getByText('Problema de la Mochila'))
-    expect(screen.getByRole('alert')).toHaveTextContent(/no está disponible/i)
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 })

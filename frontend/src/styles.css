@@ -310,3 +310,190 @@ h1 span {
   .celda.llena, .aviso { animation: none; }
   .opcion, .tooltip { transition: none; }
 }
+
+
+
+/* ============================================================
+   Pagina de un algoritmo (Mochila)
+   ============================================================ */
+.pagina {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem 4rem 2.25rem;
+}
+@media (min-width: 640px) { .pagina { padding-inline: 2.5rem 2rem; } }
+
+.volver {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--tinta);
+  font-family: var(--manuscrita);
+  font-size: 1.3rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--resaltador);
+}
+.volver:hover { background: var(--resaltador-claro); }
+.volver:focus-visible,
+.boton:focus-visible,
+.boton:focus-within,
+.campo input:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+.encabezado-pagina { margin-bottom: 2rem; }
+
+h2 {
+  margin: 1.5rem 0 .75rem;
+  font-family: var(--manuscrita);
+  font-weight: 400;
+  font-size: 1.8rem;
+  color: var(--tinta);
+}
+h3 {
+  margin: 1.25rem 0 .5rem;
+  font-family: var(--manuscrita);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--lapiz);
+}
+
+/* Hoja de cuaderno que agrupa el formulario o los resultados */
+.hoja {
+  margin-bottom: 1.75rem;
+  padding: 1.25rem;
+  background: var(--hoja);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+  box-shadow: 4px 4px 0 var(--resaltador);
+}
+.hoja h2:first-child { margin-top: 0; }
+
+/* Oculto a la vista pero accesible con teclado (el input de archivo) */
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Botones ---------- */
+.acciones { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
+
+.boton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: .5rem 1.1rem;
+  background: var(--resaltador-claro);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+  font-family: var(--texto);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s, box-shadow .12s;
+}
+.boton:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--tinta); }
+.boton:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+.boton:disabled { opacity: .5; cursor: not-allowed; }
+.boton-sec { background: var(--hoja); }
+
+/* ---------- Formulario ---------- */
+.variantes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  margin: 0 0 1.25rem;
+  padding: .5rem 1rem .75rem;
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+}
+.variantes legend {
+  padding: 0 .4rem;
+  font-family: var(--manuscrita);
+  font-size: 1.3rem;
+  color: var(--tinta);
+}
+.opcion-variante { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
+.opcion-variante input { width: 1.1rem; height: 1.1rem; accent-color: var(--tinta); }
+
+.campo { display: flex; flex-direction: column; gap: .25rem; min-width: 0; }
+form > .campo { max-width: 22rem; }
+.campo label { font-size: .9rem; font-weight: 600; color: var(--lapiz); }
+.campo input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: .4rem .6rem;
+  background: var(--papel);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+  font: inherit;
+}
+.campo input:focus { background: var(--hoja); }
+.campo.con-error input { border-color: var(--alerta); border-style: dashed; }
+.error-msg { margin: 0; color: var(--alerta); font-size: .85rem; font-weight: 600; }
+
+.lista-objetos { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.objeto {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  align-items: start;
+  padding: .9rem;
+  background: var(--papel);
+  border: 2px dashed var(--lapiz);
+  border-radius: 6px;
+}
+.objeto > .campo:first-child { grid-column: 1 / -1; }
+.objeto .quitar { grid-column: 1 / -1; justify-self: start; }
+
+@media (min-width: 720px) {
+  .objeto { grid-template-columns: 2fr 1fr 1fr auto; }
+  .objeto.con-cantidad { grid-template-columns: 2fr 1fr 1fr 1fr auto; }
+  .objeto > .campo:first-child { grid-column: auto; }
+  /* El margen alinea el boton con los inputs, no con las etiquetas */
+  .objeto .quitar { grid-column: auto; margin-top: 1.5rem; }
+}
+
+/* ---------- Avisos ---------- */
+.aviso-pagina {
+  margin: 0 0 1.75rem;
+  padding: .8rem 1rem;
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+  font-weight: 600;
+}
+.aviso-ok { background: var(--resaltador-claro); color: var(--tinta); }
+.aviso-error { background: var(--hoja); color: var(--alerta); border-color: var(--alerta); border-style: dashed; }
+
+/* ---------- Resultados ---------- */
+.optimo { margin: .25rem 0; font-family: var(--manuscrita); font-size: 1.6rem; color: var(--tinta); }
+.optimo strong {
+  padding: 0 .3em;
+  background: linear-gradient(transparent 52%, var(--resaltador-claro) 52% 92%, transparent 92%);
+}
+.seleccion { margin: 0; padding-left: 1.25rem; }
+.seleccion small, .tabla-mochila small { color: var(--lapiz); font-weight: 400; }
+
+.tabla-scroll { overflow-x: auto; padding-bottom: .5rem; }
+.tabla-mochila { border-collapse: collapse; background: var(--hoja); font-variant-numeric: tabular-nums; }
+.tabla-mochila caption { padding-bottom: .5rem; text-align: left; color: var(--lapiz); font-size: .9rem; }
+.tabla-mochila th,
+.tabla-mochila td {
+  min-width: 2.6rem;
+  padding: .35rem .6rem;
+  border: 2px solid var(--tinta);
+  text-align: center;
+  white-space: nowrap;
+}
+.tabla-mochila thead th { background: var(--tinta); color: var(--hoja); }
+.tabla-mochila tbody th { background: var(--papel); color: var(--tinta); text-align: left; }
+.tabla-mochila td.camino { background: var(--resaltador); font-weight: 600; }
+.tabla-mochila td.respuesta { background: var(--resaltador-claro); outline: 3px solid var(--tinta); outline-offset: -3px; }
+.copias { margin-left: .3rem; font-size: .75rem; font-weight: 700; color: var(--tinta); }

@@ -21,5 +21,5 @@ export const algoritmos: Algoritmo[] = [
     ruta: '/multiplicacion-matrices', disponible: false },
   { id: 'mochila', nombre: 'Problema de la Mochila',
     descripcion: 'Selecciona los objetos que maximizan el valor total sin exceder la capacidad de la mochila.',
-    ruta: '/mochila', disponible: false },
+    ruta: '/mochila', disponible: true },
 ]
