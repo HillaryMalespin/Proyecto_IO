@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
+from app.schemas.abb_schema import ProblemaABB
 
 app = FastAPI(title="Proyectos I.O. - Programación Dinámica")
 
@@ -27,3 +28,7 @@ def mochila(problema: ProblemaMochila):
     # que es lo que espera resolver_mochila
     datos = problema.model_dump()
     return resolver_mochila(datos["variante"], datos["capacidad"], datos["objetos"])
+
+@app.post("/api/abb-optimo")
+def abb_optimo(problema: dict):
+    return problema

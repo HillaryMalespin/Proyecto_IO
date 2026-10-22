@@ -66,9 +66,9 @@ class ABB:
 
 if __name__ == '__main__':
     abb = ABB(5,[0.30,0.38,0.09,0.09,0.14],[1,2,3,4,5])
+    abb.calculateTables()
     abb.printPTable()
     abb.printRTable()
-    print("This is the abb.py module.")
     # nodes = 5
     # for dif in range(1,nodes):
     #     print(f"diferencia de:{dif}")
