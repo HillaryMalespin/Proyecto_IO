@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
 from app.schemas.abb_schema import ProblemaABB
+from app.algorithms.ABB import resolver_abb
 
 app = FastAPI(title="Proyectos I.O. - Programación Dinámica")
 
@@ -30,5 +31,9 @@ def mochila(problema: ProblemaMochila):
     return resolver_mochila(datos["variante"], datos["capacidad"], datos["objetos"])
 
 @app.post("/api/abb-optimo")
-def abb_optimo(problema: dict):
-    return problema
+# FastAPI recibe el JSON y lo valida contra ProblemaABB antes de entrar a la funcion
+# el JSON se convierte en una lista de tuplas, donde cada tupla es (nombre, peso)
+# -> ver schemas/abb_schema.py
+# Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
+def abb_optimo(problema: ProblemaABB):
+    return resolver_abb([(item.llave, item.peso) for item in problema.llaves])

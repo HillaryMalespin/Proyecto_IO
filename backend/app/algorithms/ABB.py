@@ -6,17 +6,26 @@ class Node:
         self.right = None # hijo derecho
 
 class ABB:
-    def __init__(self, nodes, probabilities, keys):
-        self.nodes = nodes
-        self.probabilities = probabilities
-        self.keys = keys
+    def __init__(self, llaves):
+        self.nodes, self.probabilities, self.keys = self.normalizar(llaves)
         self.root = None
         # matriz m x m+1 ; donde 'm' = # nodos
         # se agrega una fila mas porque si k = j, A[k+1][j] da Index Out Of Bounds
-        self.tableP = [[None for _ in range(nodes+1)] for _ in range(nodes+2)]
+        self.tableP = [[None for _ in range(self.nodes+1)] for _ in range(self.nodes+2)]
         self.tableR = [row.copy() for row in self.tableP]
         # si fuera a hacerse una implementacion con una gran cantidad de nodos
         # vale la pena pensar en una implementacion con un prefix sum para mejorar el rendimiento
+
+    def normalizar(self, llaves):
+        # se recibe "llaves"; es una lista de pares (llave, peso), en cualquier orden
+        # aca se ordenan lexicograficamente y se calculan las probabilidades
+        llaves = sorted(llaves, key=lambda par: par[0])
+        keys = [nombre for nombre, peso in llaves]
+        pesos = [peso for nombre, peso in llaves]
+        total = sum(pesos)
+        probabilities = [p / total for p in pesos]
+        nodes = len(keys)
+        return nodes, probabilities, keys
 
     def printPTable(self):
         print("Tabla P:")
@@ -64,8 +73,20 @@ class ABB:
                 self.tableP[i][j] = best_candidate[1]
                 self.tableR[i][j] = best_candidate[0]
 
+def resolver_abb(llaves):
+    abb = ABB(llaves)
+    abb.calculateTables()
+    abb.printPTable()
+    abb.printRTable()
+    return {
+        "keys": abb.keys,
+        "probabilities": abb.probabilities,
+        "tableP": abb.tableP,
+        "tableR": abb.tableR
+    }
+
 if __name__ == '__main__':
-    abb = ABB(5,[0.30,0.38,0.09,0.09,0.14],[1,2,3,4,5])
+    abb = ABB([(1, 0.30), (2, 0.38), (3, 0.09), (4, 0.09), (5, 0.14)])
     abb.calculateTables()
     abb.printPTable()
     abb.printRTable()
