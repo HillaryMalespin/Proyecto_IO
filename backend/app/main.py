@@ -4,7 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
 from app.schemas.abb_schema import ProblemaABB
+from app.schemas.seriesDeportivasSchema import SeriesDeportivas
 from app.algorithms.ABB import resolver_abb
+from app.algorithms.seriesDeportivas import resolverSeriesDeportivas
 
 app = FastAPI(title="Proyectos I.O. - Programación Dinámica")
 
@@ -29,6 +31,11 @@ def mochila(problema: ProblemaMochila):
     # que es lo que espera resolver_mochila
     datos = problema.model_dump()
     return resolver_mochila(datos["variante"], datos["capacidad"], datos["objetos"])
+
+# Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
+@app.post("/api/series-deportivas")
+def seriesDeportivas(problema: SeriesDeportivas):
+    return resolverSeriesDeportivas(problema.ph, problema.pr, problema.formato)
 
 @app.post("/api/abb-optimo")
 # FastAPI recibe el JSON y lo valida contra ProblemaABB antes de entrar a la funcion

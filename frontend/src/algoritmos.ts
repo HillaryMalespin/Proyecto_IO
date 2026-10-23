@@ -12,7 +12,7 @@ export const algoritmos: Algoritmo[] = [
     ruta: '/reemplazo-equipos', disponible: false },
   { id: 'series', nombre: 'Series Deportivas',
     descripcion: 'Calcula la probabilidad de ganar una serie deportiva dadas las probabilidades de victoria en cada juego.',
-    ruta: '/series-deportivas', disponible: false },
+    ruta: '/series-deportivas', disponible: true },
   { id: 'abb', nombre: 'Árboles Binarios de Búsqueda Óptimos',
     descripcion: 'Construye el árbol de búsqueda que minimiza el costo esperado de búsqueda según las probabilidades de acceso.',
     ruta: '/abb-optimos', disponible: false },
