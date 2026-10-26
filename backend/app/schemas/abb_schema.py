@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, StringConstraints
+from typing import Annotated
 
 # el esquema que ABB espera es:
 # lista de:
@@ -14,9 +15,14 @@ from pydantic import BaseModel
 
 #     ]
 # }
+
+# quitamos espacio al inicio y al final
+# tampoco se aceptan llaves vacias
+NombreLlave = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
+
 class Llave(BaseModel):
     llave: str
-    peso: int
+    peso: int = Field(ge=0) # validacion -> no valores negativos
 
 class ProblemaABB(BaseModel):
-    llaves: list[Llave]
+    llaves: list[Llave] = Field(min_length=1) # validacion -> al menos una llave

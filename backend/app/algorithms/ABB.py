@@ -73,16 +73,49 @@ class ABB:
                 self.tableP[i][j] = best_candidate[1]
                 self.tableR[i][j] = best_candidate[0]
 
+    def getNode(self, i, j):
+        # recorrer la tabla R, R[i][j] se toma el valor de R[i][j] como "k" y 
+        # de forma recursiva se escoge:
+        # hijo izquierdo -> R[i][k-1]
+        # hijo derecho   -> R[k+1][j]
+        if i > j:
+            return None
+        k = self.tableR[i][j]
+        root = Node(self.keys[k-1])
+        root.left = self.getNode(i,k-1)
+        root.right = self.getNode(k+1,j)
+        return root
+
+    def createOBST(self):    
+        self.root = self.getNode(1, self.nodes)
+
+    # hay que convertir el arbol en un objeto JSON que se pueda enviar al API
+    def serializeTree(self):
+        # recursivo {"value":x,"left":node.left,"right":node.right} 
+        # hasta que node == None
+        def serialize_node(node):
+            if node is None:
+                return None
+            return {
+                "value": node.value,
+                "left": serialize_node(node.left),
+                "right": serialize_node(node.right),
+            }
+        return serialize_node(self.root)
+
 def resolver_abb(llaves):
     abb = ABB(llaves)
     abb.calculateTables()
     abb.printPTable()
     abb.printRTable()
+    abb.createOBST()
+    tree = abb.serializeTree()
     return {
         "keys": abb.keys,
         "probabilities": abb.probabilities,
         "tableP": abb.tableP,
-        "tableR": abb.tableR
+        "tableR": abb.tableR,
+        "tree": tree,
     }
 
 if __name__ == '__main__':
