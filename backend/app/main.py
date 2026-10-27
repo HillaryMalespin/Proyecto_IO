@@ -3,14 +3,23 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.errores import manejar_inesperado, manejar_validacion
-from backend.app.algorithms import reemplazo
+
+# TODO : cambiar "algoritmos" por "algorithms" en todos los imports de reemplazo temporalmente
+# es que si no el backend no compila, toca resolver este problema
+# por ahora lo dejo asi para poder avanzar con lo de matrices y abb (gui)
+try:
+    from app.algorithms import reemplazo
+except ImportError:
+    reemplazo = None
 
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
 from app.schemas.abb_schema import ProblemaABB
 from app.schemas.seriesDeportivasSchema import SeriesDeportivas
+from app.schemas.matrices_schema import ProblemaMatrices
 from app.algorithms.ABB import resolver_abb
 from app.algorithms.seriesDeportivas import resolverSeriesDeportivas
+from app.algorithms.matrices import resolver_matrices
 
 app = FastAPI(title="Proyectos I.O. - Programación Dinámica")
 
@@ -24,7 +33,9 @@ app.add_middleware(
 app.add_exception_handler(RequestValidationError, manejar_validacion)
 app.add_exception_handler(Exception, manejar_inesperado)
 
-app.include_router(reemplazo.router)
+# TODO : cambiar "algoritmos" por "algorithms" en todos los imports de reemplazo temporalmente
+if reemplazo is not None:
+    app.include_router(reemplazo.router)
 
 
 @app.get("/api/health")
@@ -53,3 +64,11 @@ def seriesDeportivas(problema: SeriesDeportivas):
 # Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
 def abb_optimo(problema: ProblemaABB):
     return resolver_abb([(item.llave, item.peso) for item in problema.llaves])
+
+# FastAPI valida el cuerpo contra ProblemaMatrices antes de entrar a la funcion
+# el JSON se convierte en una lista de enteros, que es lo que espera resolver_matrices
+# -> ver schemas/matrices_schema.py
+# Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
+@app.post("/api/matrices")
+def matrices(problema: ProblemaMatrices):
+    return resolver_matrices(problema.dimensiones)

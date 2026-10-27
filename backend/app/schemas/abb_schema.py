@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field, StringConstraints
-from typing import Annotated
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
 # el esquema que ABB espera es:
 # lista de:
@@ -16,13 +17,23 @@ from typing import Annotated
 #     ]
 # }
 
-# quitamos espacio al inicio y al final
-# tampoco se aceptan llaves vacias
+# quitamos espacio al inicio y al final y tampoco se aceptan llaves vacias
 NombreLlave = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 class Llave(BaseModel):
-    llave: str
-    peso: int = Field(ge=0) # validacion -> no valores negativos
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    llave: NombreLlave
+    peso: int = Field(gt=0, strict=True)
 
 class ProblemaABB(BaseModel):
-    llaves: list[Llave] = Field(min_length=1) # validacion -> al menos una llave
+    algoritmo: Literal["abb-optimo"] = "abb-optimo"
+    llaves: list[Llave] = Field(min_length=1)
+
+    @field_validator("llaves")
+    @classmethod
+    def llaves_unicas(cls, llaves):
+        nombres = [item.llave for item in llaves]
+        if len(nombres) != len(set(nombres)):
+            raise ValueError("Las llaves deben ser unicas")
+        return llaves
