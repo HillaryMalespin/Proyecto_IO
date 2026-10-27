@@ -1,5 +1,9 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.errores import manejar_inesperado, manejar_validacion
+from backend.app.algorithms import reemplazo
 
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
@@ -16,6 +20,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_exception_handler(RequestValidationError, manejar_validacion)
+app.add_exception_handler(Exception, manejar_inesperado)
+
+app.include_router(reemplazo.router)
 
 
 @app.get("/api/health")

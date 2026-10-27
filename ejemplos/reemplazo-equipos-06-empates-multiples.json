@@ -1,0 +1,24 @@
+{
+  "algoritmo": "reemplazo-equipos",
+  "costoInicial": 0,
+  "plazo": 12,
+  "vidaUtil": 4,
+  "periodos": [
+    {
+      "reventa": 0,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 0,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 0,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 0,
+      "mantenimiento": 1
+    }
+  ]
+}

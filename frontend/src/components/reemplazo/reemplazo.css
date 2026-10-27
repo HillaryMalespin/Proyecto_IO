@@ -1,0 +1,41 @@
+.navegador-planes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.indicador {
+  margin: 0;
+  font-family: var(--manuscrita);
+  font-size: 1.5rem;
+  color: var(--tinta);
+}
+.resumen-plan { margin: 0 0 1rem; }
+
+/* Línea de tiempo: cada tramo ocupa un ancho proporcional a sus años */
+.linea {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0 0 .5rem;
+  overflow-x: auto;
+}
+.segmento {
+  flex: var(--anios) 0 calc(var(--anios) * 2.75rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.25rem;
+  padding: .4rem .25rem;
+  background: var(--resaltador);
+  color: var(--tinta);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+}
+.segmento:nth-child(even) { background: var(--resaltador-claro); }
+.segmento-num { font-family: var(--manuscrita); font-size: 1.5rem; line-height: 1.1; }
+.segmento-rango { font-size: .8rem; font-weight: 600; }

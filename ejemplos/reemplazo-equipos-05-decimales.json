@@ -1,0 +1,24 @@
+{
+  "algoritmo": "reemplazo-equipos",
+  "costoInicial": 1250.5,
+  "plazo": 6,
+  "vidaUtil": 4,
+  "periodos": [
+    {
+      "reventa": 900.25,
+      "mantenimiento": 45.5
+    },
+    {
+      "reventa": 700.75,
+      "mantenimiento": 60.25
+    },
+    {
+      "reventa": 520.5,
+      "mantenimiento": 88.75
+    },
+    {
+      "reventa": 380,
+      "mantenimiento": 120
+    }
+  ]
+}

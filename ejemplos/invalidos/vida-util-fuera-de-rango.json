@@ -1,0 +1,52 @@
+{
+  "algoritmo": "reemplazo-equipos",
+  "costoInicial": 500,
+  "plazo": 5,
+  "vidaUtil": 11,
+  "periodos": [
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    },
+    {
+      "reventa": 1,
+      "mantenimiento": 1
+    }
+  ]
+}

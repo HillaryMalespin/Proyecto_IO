@@ -1,0 +1,129 @@
+/* Estilos comunes de las pantallas de algoritmos (usan las variables de styles.css) */
+.pagina {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem 5rem 2.25rem;
+}
+@media (min-width: 640px) { .pagina { padding-inline: 2.5rem 2rem; } }
+
+.pagina-cabecera { margin-bottom: 1.75rem; }
+.volver {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: .4rem .9rem;
+  background: var(--hoja);
+  color: var(--tinta);
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--tinta);
+  border-radius: 8px;
+}
+.volver:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+@media (hover: hover) { .volver:hover { box-shadow: 3px 3px 0 var(--resaltador); } }
+
+/* Paneles tipo hoja */
+.panel {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--hoja);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+}
+.panel h2 {
+  margin: 0 0 1rem;
+  font-family: var(--manuscrita);
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: var(--tinta);
+}
+
+/* Formularios */
+.rejilla-campos { display: grid; gap: 1.1rem; }
+@media (min-width: 640px) { .rejilla-campos { grid-template-columns: repeat(3, 1fr); } }
+
+.campo { display: grid; gap: .3rem; align-content: start; }
+.campo label { font-weight: 600; }
+.ayuda { margin: 0; color: var(--lapiz); font-size: .9rem; }
+.panel > .ayuda { margin-bottom: 1rem; }
+
+.entrada {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .5rem .75rem;
+  font: inherit;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 2px solid var(--lapiz);
+  border-radius: 6px;
+}
+.entrada:focus { outline: 3px solid var(--resaltador-claro); border-color: var(--tinta); }
+.entrada[aria-invalid="true"] { border-color: var(--alerta); background: #FFF6F4; }
+
+.error { margin: .3rem 0 0; color: var(--alerta); font-size: .88rem; font-weight: 600; }
+.error::before { content: "⚠ "; }
+
+/* Botones */
+.acciones { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2rem; }
+.boton {
+  min-height: 2.75rem;
+  padding: .5rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--tinta);
+  background: var(--hoja);
+  border: 2px solid var(--tinta);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.boton-principal { background: var(--resaltador-claro); }
+.boton:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+.boton:disabled { opacity: .55; cursor: not-allowed; }
+@media (hover: hover) { .boton:not(:disabled):hover { box-shadow: 3px 3px 0 var(--resaltador); } }
+
+/* Mensajes */
+.mensaje {
+  margin: 0 0 1.25rem;
+  padding: .8rem 1rem;
+  background: var(--resaltador-claro);
+  border: 2px solid var(--tinta);
+  border-radius: 6px;
+}
+.mensaje-error { background: #FFF6F4; border-color: var(--alerta); }
+.mensaje-titulo { margin: 0; font-weight: 700; }
+.mensaje ul { margin: .4rem 0 0; padding-left: 1.2rem; }
+
+/* Tablas */
+.tabla-scroll { overflow-x: auto; }
+.tabla-datos, .tabla-analisis { width: 100%; border-collapse: collapse; }
+.tabla-datos th, .tabla-datos td,
+.tabla-analisis th, .tabla-analisis td {
+  padding: .5rem .7rem;
+  border: 1px solid var(--lapiz);
+  text-align: left;
+  vertical-align: top;
+}
+.tabla-datos thead th, .tabla-analisis thead th { background: var(--resaltador); color: var(--tinta); }
+.tabla-datos tbody th, .tabla-analisis tbody th, .tabla-analisis tfoot th { background: var(--papel); }
+.tabla-analisis tfoot td, .tabla-analisis tfoot th { font-weight: 700; }
+.tabla-analisis .num { text-align: right; white-space: nowrap; }
+.tabla-datos .entrada { min-width: 6rem; }
+
+.alternativas { margin: 0; padding: 0; list-style: none; white-space: nowrap; }
+.alternativas .optima { font-weight: 700; background: linear-gradient(transparent 55%, var(--resaltador-claro) 55%); }
+
+.costo-minimo { margin: 0; font-size: 1.3rem; }
+.costo-minimo strong { font-family: var(--manuscrita); font-size: 2rem; font-weight: 400; }
+
+/* Solo para lectores de pantalla */
+.sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
