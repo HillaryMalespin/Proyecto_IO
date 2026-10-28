@@ -18,7 +18,7 @@ export const algoritmos: Algoritmo[] = [
     ruta: '/abb-optimos', disponible: false },
   { id: 'matrices', nombre: 'Multiplicación de Matrices',
     descripcion: 'Encuentra el orden de paréntesis que minimiza el número de multiplicaciones al encadenar matrices.',
-    ruta: '/multiplicacion-matrices', disponible: false },
+    ruta: '/multiplicacion-matrices', disponible: true },
   { id: 'mochila', nombre: 'Problema de la Mochila',
     descripcion: 'Selecciona los objetos que maximizan el valor total sin exceder la capacidad de la mochila.',
     ruta: '/mochila', disponible: true },
