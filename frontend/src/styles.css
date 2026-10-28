@@ -497,3 +497,56 @@ form > .campo { max-width: 22rem; }
 .tabla-mochila td.camino { background: var(--resaltador); font-weight: 600; }
 .tabla-mochila td.respuesta { background: var(--resaltador-claro); outline: 3px solid var(--tinta); outline-offset: -3px; }
 .copias { margin-left: .3rem; font-size: .75rem; font-weight: 700; color: var(--tinta); }
+
+/* ============================================================
+   Árbol binario de búsqueda óptimo
+   ============================================================ */
+.arbol-scroll {
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+.arbol-abb {
+  display: block;
+  margin: 0 auto;
+}
+.arbol-arista {
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+.arbol-sombra { fill: var(--resaltador); }
+.arbol-nodo {
+  fill: var(--hoja);
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+.arbol-raiz .arbol-nodo { fill: var(--resaltador-claro); }
+.arbol-indice {
+  font-family: var(--manuscrita);
+  font-size: 1.35rem;
+  fill: var(--tinta);
+}
+.arbol-nombre {
+  font-family: var(--texto);
+  font-size: .85rem;
+  font-weight: 600;
+  fill: var(--lapiz);
+}
+
+/* Aparece nivel por nivel, como las celdas de la tabla del menú */
+.arbol-grupo {
+  animation: aparecer-nodo .35s ease-out backwards;
+  animation-delay: calc(var(--d) * 180ms);
+}
+@keyframes aparecer-nodo { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .arbol-grupo { animation: none; }
+}
+
+.tabla-abb td { min-width: 4.5rem; }
+
+.aviso-detalles { margin: .4rem 0 0; padding-left: 1.25rem; font-weight: 400; }
+
+@media (min-width: 720px) {
+  .objeto.objeto-abb { grid-template-columns: 2fr 1fr auto; }
+}

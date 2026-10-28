@@ -1,4 +1,5 @@
 import type { DatosReemplazo, Resultado } from './reemplazo'
+import { esResultadoABB, type Problema as ProblemaABB } from './abb'
 
 export type RespuestaApi<T> = { ok: true; datos: T } | { ok: false; errores: string[] }
 
@@ -50,4 +51,42 @@ export async function resolverReemplazo(
       errores: ['No se pudo conectar con el servidor. Verifique que el backend esté en ejecución.'],
     }
   }
+}
+
+// es el mismo que se usa para remplazo pero generico para que se pueda usar y todos queden iguales
+async function enviar<T>(
+  ruta: string,
+  cuerpoEnviado: unknown,
+  esValido: (x: unknown) => x is T,
+  signal?: AbortSignal,
+): Promise<RespuestaApi<T>> {
+  try {
+    const r = await fetch(ruta, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cuerpoEnviado),
+      signal,
+    })
+    const cuerpo: unknown = await r.json().catch(() => null)
+    if (r.ok && esValido(cuerpo)) return { ok: true, datos: cuerpo }
+    const errores = extraerErrores(cuerpo)
+    return {
+      ok: false,
+      errores: errores.length > 0 ? errores : ['El servidor respondió con un error inesperado.'],
+    }
+  } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      return { ok: false, errores: ['El servidor tardó demasiado en responder. Intente de nuevo.'] }
+    }
+    return {
+      ok: false,
+      errores: ['No se pudo conectar con el servidor. Verifique que el backend esté en ejecución.'],
+    }
+  }
+}
+
+// aca podrian ir las demas llamadas
+
+export function resolverABB(problema: ProblemaABB, signal?: AbortSignal) {
+  return enviar('/api/abb-optimo', problema, esResultadoABB, signal)
 }

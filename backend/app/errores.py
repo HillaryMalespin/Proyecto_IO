@@ -43,6 +43,14 @@ def _mensaje(err: dict) -> str:
         return "el contenido enviado no es un JSON válido"
     if tipo == "value_error":
         return str(ctx.get("error", err.get("msg", "valor inválido")))
+    if tipo == "greater_than":
+        return f"debe ser mayor que {ctx.get('gt')}"
+    if tipo == "string_too_short":
+        return "no puede estar vacío"
+    if tipo == "too_short":
+        return f"debe tener al menos {ctx.get('min_length')} elemento(s)"
+    if tipo == "too_long":
+        return f"debe tener como máximo {ctx.get('max_length')} elemento(s)"
     return err.get("msg", "valor inválido")
 
 
