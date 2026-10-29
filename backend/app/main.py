@@ -1,16 +1,7 @@
 from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.errores import manejar_inesperado, manejar_validacion
-
-# TODO : cambiar "algoritmos" por "algorithms" en todos los imports de reemplazo temporalmente
-# es que si no el backend no compila, toca resolver este problema
-# por ahora lo dejo asi para poder avanzar con lo de matrices y abb (gui)
-try:
-    from app.algorithms import reemplazo
-except ImportError:
-    reemplazo = None
+from app.routers.reemplazo import router as router_reemplazo
 
 from app.algorithms.mochila import resolver_mochila
 from app.schemas.mochilaValidarArchivo import ProblemaMochila
@@ -30,12 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_exception_handler(RequestValidationError, manejar_validacion)
-app.add_exception_handler(Exception, manejar_inesperado)
-
-# TODO : cambiar "algoritmos" por "algorithms" en todos los imports de reemplazo temporalmente
-if reemplazo is not None:
-    app.include_router(reemplazo.router)
+# Proyecto 1 (Reemplazo de Equipos): su router está en app/routers/reemplazo.py
+# y el algoritmo en app/algorithms/reemplazo.py
+app.include_router(router_reemplazo)
 
 
 @app.get("/api/health")
@@ -60,14 +48,14 @@ def seriesDeportivas(problema: SeriesDeportivas):
 @app.post("/api/abb-optimo")
 # FastAPI recibe el JSON y lo valida contra ProblemaABB antes de entrar a la funcion
 # el JSON se convierte en una lista de tuplas, donde cada tupla es (nombre, peso)
-# -> ver schemas/abb_schema.py
+#  schemas/abb_schema.py
 # Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
 def abb_optimo(problema: ProblemaABB):
     return resolver_abb([(item.llave, item.peso) for item in problema.llaves])
 
 # FastAPI valida el cuerpo contra ProblemaMatrices antes de entrar a la funcion
 # el JSON se convierte en una lista de enteros, que es lo que espera resolver_matrices
-# -> ver schemas/matrices_schema.py
+# schemas/matrices_schema.py
 # Si algo es invalido responde 422 solo, y este codigo nunca se ejecuta.
 @app.post("/api/matrices")
 def matrices(problema: ProblemaMatrices):

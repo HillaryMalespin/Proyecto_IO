@@ -10,7 +10,11 @@ const TEXTO_ESTADO = {
   inactivo: 'Servicio no disponible. Inicie el backend e intente de nuevo.',
 }
 
-export default function Menu() {
+interface Props {
+  opciones?: Algoritmo[]
+}
+
+export default function Menu({ opciones = algoritmos }: Props) {
   const navigate = useNavigate()
   const estado = useHealth()
   const [aviso, setAviso] = useState<string | null>(null)
@@ -46,7 +50,7 @@ export default function Menu() {
 
       <nav aria-label="Algoritmos">
         <ul className="rejilla">
-          {algoritmos.map((a) => (
+          {opciones.map((a) => (
             <li className="opcion" key={a.id}>
               <button className="tarjeta" aria-describedby={`tip-${a.id}`} onClick={() => abrir(a)}>
                 <span className="tarjeta-nombre">{a.nombre}</span>

@@ -1,12 +1,19 @@
-"""Mensajes de error claros (en español) para datos inválidos."""
+"""Mensajes de error claros (en español) para datos inválidos.
 
-from fastapi import Request
+La clase RutaConErroresClaros se aplica SOLO al router del Proyecto 1, así los
+endpoints de los otros proyectos conservan el formato de error por defecto.
+"""
+
+from collections.abc import Callable
+
+from fastapi import Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
 
 
 def _campo(loc: tuple) -> str:
-    partes = []
+    partes: list[str] = []
     for p in loc:
         if p == "body":
             continue
@@ -56,3 +63,20 @@ async def manejar_inesperado(_: Request, exc: Exception) -> JSONResponse:
         status_code=500,
         content={"errores": ["Ocurrió un error inesperado en el servidor."]},
     )
+
+
+class RutaConErroresClaros(APIRoute):
+    """Ruta que responde con {"errores": [...]} en español, sin afectar otras rutas."""
+
+    def get_route_handler(self) -> Callable:
+        original = super().get_route_handler()
+
+        async def manejador(request: Request) -> Response:
+            try:
+                return await original(request)
+            except RequestValidationError as exc:
+                return await manejar_validacion(request, exc)
+            except Exception as exc:  # noqa: BLE001 - nunca mostrar un error crudo
+                return await manejar_inesperado(request, exc)
+
+        return manejador

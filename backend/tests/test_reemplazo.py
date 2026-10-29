@@ -6,7 +6,7 @@ from itertools import product
 import pytest
 from fastapi.testclient import TestClient
 
-from app.algoritmos.reemplazo import LIMITE_PLANES, resolver
+from app.algorithms.reemplazo import LIMITE_PLANES, resolver
 from app.main import app
 
 client = TestClient(app)
