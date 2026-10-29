@@ -1,0 +1,5 @@
+{ "algoritmo": "mochila", "variante": "0-1", "capacidad": "10",
+  "objetos": [
+    { "nombre": "Libro", "peso": 5, "valor": 10 },
+    { "nombre": "Cámara", "peso": 4, "valor": 40 }
+  ] }

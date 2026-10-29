@@ -1,0 +1,17 @@
+{
+  "algoritmo": "mochila",
+  "variante": "0-1",
+  "capacidad": 7,
+  "objetos": [
+    { "nombre": "A", "peso": 1, "valor": 1 },
+    { "nombre": "B", "peso": 1, "valor": 1 },
+    { "nombre": "C", "peso": 1, "valor": 1 },
+    { "nombre": "D", "peso": 1, "valor": 1 },
+    { "nombre": "E", "peso": 1, "valor": 1 },
+    { "nombre": "F", "peso": 1, "valor": 1 },
+    { "nombre": "G", "peso": 1, "valor": 1 },
+    { "nombre": "H", "peso": 1, "valor": 1 },
+    { "nombre": "I", "peso": 1, "valor": 1 },
+    { "nombre": "J", "peso": 1, "valor": 1 }
+  ]
+}

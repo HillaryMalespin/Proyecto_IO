@@ -143,3 +143,17 @@ def test_api_rechaza_datos_invalidos(cuerpo):
 def test_api_rechaza_cuerpo_que_no_es_json():
     r = client.post("/api/mochila", content="esto no es json", headers={"content-type": "application/json"})
     assert r.status_code == 422
+
+
+# ---------- Casos extremos encontrados al intentar romper el sistema ----------
+
+def test_api_valor_enorme_no_desborda():
+    # 1e308 sumado varias veces daba infinito y un error 500; ahora se rechaza con 422
+    cuerpo = problema(variante="no-acotada", capacidad=20, objetos=[{"nombre": "A", "peso": 1, "valor": 1e308}])
+    assert client.post("/api/mochila", json=cuerpo).status_code == 422
+
+
+def test_api_nan_en_el_cuerpo_da_422_y_no_500():
+    texto = '{"variante":"0-1","capacidad":5,"objetos":[{"nombre":"A","peso":1,"valor":NaN}]}'
+    r = client.post("/api/mochila", content=texto, headers={"content-type": "application/json"})
+    assert r.status_code == 422

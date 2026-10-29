@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.routers.reemplazo import router as router_reemplazo
 
@@ -24,6 +26,13 @@ app.add_middleware(
 # Proyecto 1 (Reemplazo de Equipos): su router está en app/routers/reemplazo.py
 # y el algoritmo en app/algorithms/reemplazo.py
 app.include_router(router_reemplazo)
+
+# Respuesta 422 sin el campo "input": si el usuario envia NaN o infinito, devolverlo
+# en el mensaje de error romperia la serializacion a JSON y daria un error 500
+@app.exception_handler(RequestValidationError)
+async def errores_de_validacion(request: Request, exc: RequestValidationError):
+    detalle = [{"loc": e["loc"], "msg": e["msg"], "type": e["type"]} for e in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": detalle})
 
 
 @app.get("/api/health")

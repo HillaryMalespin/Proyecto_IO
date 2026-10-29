@@ -1,0 +1,17 @@
+{
+  "algoritmo": "mochila",
+  "variante": "acotada",
+  "capacidad": 20,
+  "objetos": [
+    { "nombre": "Pan", "peso": 1, "valor": 2.5, "cantidad": 20 },
+    { "nombre": "Agua", "peso": 2, "valor": 5.25, "cantidad": 15 },
+    { "nombre": "Cuerda", "peso": 3, "valor": 7.75, "cantidad": 10 },
+    { "nombre": "Linterna", "peso": 4, "valor": 11, "cantidad": 8 },
+    { "nombre": "Botiquín", "peso": 5, "valor": 13.4, "cantidad": 6 },
+    { "nombre": "Manta", "peso": 6, "valor": 16.9, "cantidad": 5 },
+    { "nombre": "Tienda", "peso": 7, "valor": 19.95, "cantidad": 4 },
+    { "nombre": "Hornilla", "peso": 8, "valor": 23.1, "cantidad": 3 },
+    { "nombre": "Mapa", "peso": 9, "valor": 26.3, "cantidad": 2 },
+    { "nombre": "Brújula", "peso": 10, "valor": 30, "cantidad": 2 }
+  ]
+}

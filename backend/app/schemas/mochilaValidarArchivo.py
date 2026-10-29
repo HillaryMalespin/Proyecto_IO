@@ -10,7 +10,8 @@ class Objeto(BaseModel):
     nombre: str = Field(min_length=1, max_length=40)
     # strict=True: rechaza "5", 2.5 o true donde se espera un entero
     peso: int = Field(gt=0, strict=True)
-    valor: float = Field(gt=0, strict=True, allow_inf_nan=False)
+        # le=1e9: evita desbordes (inf) al sumar muchas copias
+    valor: float = Field(gt=0, le=1_000_000_000, strict=True, allow_inf_nan=False)
     # Solo se usa en la variante acotada; en las otras puede venir o no
     cantidad: int | None = Field(default=None, gt=0, strict=True)
 

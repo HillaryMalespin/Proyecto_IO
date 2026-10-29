@@ -43,6 +43,12 @@ describe('validación del formulario', () => {
     expect(errores.objetos[0].valor).toBeTruthy()
   })
 
+   it('rechaza valores demasiado grandes', () => {
+    const f = valido()
+    f.objetos[0].valor = '1' + '0'.repeat(12)
+    expect(validarFormulario(f).errores.objetos[0].valor).toBeTruthy()
+  })
+
   it('exige cantidad solo en la variante acotada', () => {
     const f = valido()
     expect(validarFormulario(f).problema).not.toBeNull()

@@ -1,0 +1,9 @@
+{
+  "algoritmo": "mochila",
+  "variante": "acotado",
+  "capacidad": 15,
+  "objetos": [
+    { "nombre": "Linterna", "peso": 2, "valor": 10, "cantidad": 3 },
+    { "nombre": "Agua", "peso": 5, "valor": 18, "cantidad": 2 }
+  ]
+}

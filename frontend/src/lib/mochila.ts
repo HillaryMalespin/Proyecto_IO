@@ -11,6 +11,7 @@ export const VARIANTES: { valor: Variante; etiqueta: string }[] = [
 
 export const MAX_CAPACIDAD = 20
 export const MAX_OBJETOS = 10
+export const MAX_VALOR = 1_000_000_000 // evita desbordes en el backend
 
 // Lo que el usuario escribe: todo como texto, asi se puede validar "vacio" y "no es numero"
 export interface ObjetoForm {
@@ -99,6 +100,7 @@ export function validarValor(t: string): string | undefined {
   if (!DECIMAL.test(s)) return 'El valor debe ser un número positivo.'
   const n = Number(s.replace(',', '.'))
   if (!Number.isFinite(n) || n <= 0) return 'El valor debe ser mayor que cero.'
+  if (n > MAX_VALOR) return 'El valor no puede pasar de 1 000 000 000.'
 }
 
 export function validarObjeto(o: ObjetoForm, variante: Variante): ErroresObjeto {
@@ -167,10 +169,12 @@ export const aJson = (p: Problema): string => JSON.stringify(p, null, 2)
 export type ResultadoCarga = { ok: true; formulario: ProblemaForm } | { ok: false; error: string }
 
 // Nunca lanza excepciones: cualquier problema vuelve como { ok: false, error }
+// Nunca lanza excepciones: cualquier problema vuelve como { ok: false, error }
 export function cargarArchivo(texto: string): ResultadoCarga {
   let datos: unknown
   try {
-    datos = JSON.parse(texto)
+    // Algunos editores de Windows agregan un BOM invisible al inicio; lo quito
+    datos = JSON.parse(texto.replace(/^\uFEFF/, ''))
   } catch {
     return { ok: false, error: 'El archivo no es un JSON válido.' }
   }
@@ -187,6 +191,31 @@ export function cargarArchivo(texto: string): ResultadoCarga {
   }
   if (!Array.isArray(d.objetos)) {
     return { ok: false, error: 'Falta la lista "objetos".' }
+  }
+  // Corto temprano: no vale la pena procesar miles de objetos para rechazarlos
+  if (d.objetos.length > MAX_OBJETOS) {
+    return { ok: false, error: `Máximo ${MAX_OBJETOS} objetos.` }
+  }
+
+  // Tipos estrictos, como el formato del enunciado: numeros como numeros, nombre como texto
+  if (typeof d.capacidad !== 'number') {
+    return { ok: false, error: 'La capacidad falta o no es un número.' }
+  }
+  for (let i = 0; i < d.objetos.length; i++) {
+    const o = d.objetos[i]
+    if (typeof o !== 'object' || o === null || Array.isArray(o)) {
+      return { ok: false, error: `Objeto ${i + 1}: debe ser un objeto con nombre, peso y valor.` }
+    }
+    const ob = o as Record<string, unknown>
+    if (typeof ob.nombre !== 'string') {
+      return { ok: false, error: `Objeto ${i + 1}: "nombre" falta o no es texto.` }
+    }
+    const numericos = d.variante === 'acotada' ? ['peso', 'valor', 'cantidad'] : ['peso', 'valor']
+    for (const campo of numericos) {
+      if (typeof ob[campo] !== 'number') {
+        return { ok: false, error: `Objeto ${i + 1}: "${campo}" falta o no es un número.` }
+      }
+    }
   }
 
   // Convierto a texto lo que sea numero o string; lo demas queda vacio y la validacion lo rechaza
@@ -211,4 +240,5 @@ export function cargarArchivo(texto: string): ResultadoCarga {
   return { ok: true, formulario }
 }
 
-export const formatear = (n: number): string => String(Math.round(n * 10000) / 10000)
+// Limpia el ruido de decimales (0.1 + 0.2 -> 0.3) sin convertir valores pequenos en 0
+export const formatear = (n: number): string => String(Number(n.toPrecision(12)))
