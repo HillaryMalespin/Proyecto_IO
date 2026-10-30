@@ -4,6 +4,7 @@ import Reemplazo from './pages/Reemplazo'
 import Mochila from './pages/Mochila'
 import SeriesDeportivas from './pages/SeriesDeportivas'
 import Matrices from './pages/Matrices'
+import ABB from './pages/ABB'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/mochila" element={<Mochila />} />
       <Route path="/series-deportivas" element={<SeriesDeportivas />} />
       <Route path="/multiplicacion-matrices" element={<Matrices />} />
+      <Route path="/abb-optimos" element={<ABB />} />
       {/* Proyectos se agregan */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
