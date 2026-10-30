@@ -1,10 +1,18 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import TablaSeriesDeportivas from '../components/TablaSeriesDeportivas'
 import {
   MAX_JUEGOS,
+  aJson,
   type Problema,
+  type ProblemaObjeto,
+  cargarArchivo,
 } from '../lib/seriesDeportivas'
+
+interface Aviso {
+  tipo: 'error' | 'ok'
+  texto: string
+}
 
 export default function SeriesDeportivas() {
   const [juegos, setJuegos] = useState<string>("")
@@ -15,6 +23,7 @@ export default function SeriesDeportivas() {
   const [resolviendo, setResolviendo] = useState<boolean>(false)
   const [guardando, setGuardando] = useState<boolean>(false)
   const [cargando, setCargando] = useState<boolean>(false)
+  const [aviso, setAviso] = useState<Aviso | null>(null)
 
   const cambiarTamanyoFormato = async (entrada: number) =>{
     setResultado([])
@@ -35,9 +44,6 @@ export default function SeriesDeportivas() {
     else if (entrada == 0){
       setFormato([])//no hay juegos
     }
-    else{
-      //todo tamanyo invalido
-    }
   }
 
   const cambiarCantidad = async (entrada: string) =>{
@@ -55,9 +61,6 @@ export default function SeriesDeportivas() {
 
       setJuegos(entrada) //Se permite vacio si entrada == ""
       cambiarTamanyoFormato(Number(entrada))
-    }
-    else {
-      //todo error solo se permiten numeros enteros
     }
   }
   const cambiarPH = async (entrada: string) =>{
@@ -89,25 +92,83 @@ export default function SeriesDeportivas() {
         nuevoformato[numeroJuego] = estado
         setFormato(nuevoformato)
       }
-      else {
-        //todo error indice decimal invalido
-      }
-    }
-    else{
-      //todo error indice invalido
     }
   }
 
-  const cargar = async () =>{
+const cargar = async (e: ChangeEvent<HTMLInputElement>) => {
     setResultado([])
     setCargando(true)
-    //TODO
+
+    const archivo = e.target.files?.[0]
+    e.target.value = '' // permite volver a cargar el mismo archivo
+    if (!archivo){
+      setCargando(false)
+      return
+    }
+    if (archivo.size > 1_000_000) {
+      setAviso({ tipo: 'error', texto: 'El archivo es demasiado grande.' })
+      setCargando(false)
+      return
+    }
+    let texto: string
+    try {
+      texto = await archivo.text()
+    } catch {
+      setAviso({ tipo: 'error', texto: 'No se pudo leer el archivo.' })
+      setCargando(false)
+      return
+    }
+    const r = cargarArchivo(texto)
+    if (!r.ok) {
+      setAviso({ tipo: 'error', texto: r.error })
+      setCargando(false)
+      setCargando(false)
+      return
+    }
+
     setCargando(false)
+    
+    setJuegos(r.formulario.juegos)
+    setPH(r.formulario.ph)
+    setPR(r.formulario.pr)
+    setFormato(r.formulario.formato)
+
+    if (!r.fallback) {
+      setAviso({ tipo: 'ok', texto: `Archivo "${archivo.name}" cargado. Puede editarlo y resolver.` })
+    }
+    else {
+      setAviso({ tipo: 'error', texto: r.error })
+    }
   }
-  const guardar = async () =>{
+  const guardar = () => {
     setGuardando(true)
-    //TODO
+
+    if (juegos == "" || ph == "" || pr == "") {
+      setAviso({ tipo: 'error', texto: 'Corrija los datos antes de guardar el archivo.' })
+      return
+    }
+
+    const problema: ProblemaObjeto = {
+      algoritmo: 'series-deportivas',
+      juegos: juegos,
+      ph: ph,
+      pr: pr,
+      formato: formato
+    }
+
+    const fecha = new Date()
+
+    // Descarga de un .json creado en el navegador
+    const blob = new Blob([aJson(problema)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'series-deportivas_'+fecha.getFullYear()+fecha.getDate()+fecha.getHours()+fecha.getSeconds()+'.json'
+    a.click()
+    URL.revokeObjectURL(url)
+
     setGuardando(false)
+    setAviso({ tipo: 'ok', texto: 'Archivo guardado como series-deportivas_'+fecha.getFullYear()+fecha.getDate()+fecha.getHours()+fecha.getSeconds()+'.json.' })
   }
 
   const resolver = async (e: FormEvent) =>{
@@ -115,10 +176,12 @@ export default function SeriesDeportivas() {
 
     if (resultado.length == 0){//si hay algo que resolver
       if (juegos == "" || ph == "" || pr == ""){
-        //todo avisar q faltan campos
+        setAviso({ tipo: 'error', texto: 'Hay datos inválidos. Revise los campos marcados.' })
+        return
       }
       else {
         setResolviendo(true)
+        setAviso(null)
         try {
           const problema: Problema = {
             ph: Number(ph),
@@ -132,13 +195,13 @@ export default function SeriesDeportivas() {
             body: JSON.stringify(problema),
           })
           if (!r.ok) {
-            /*setAviso({
+            setAviso({
               tipo: 'error',
               texto:
                 r.status === 422
                   ? 'El servidor rechazó los datos. Revíselos e intente de nuevo.'
                   : 'El servidor no pudo resolver el problema.',
-            }) todo aviso*/
+            })
             return
           }
           const datos = await r.json()
@@ -146,15 +209,15 @@ export default function SeriesDeportivas() {
           if (
             !datos || datos.resultado.constructor !== Array
           ) {
-            //todo setAviso({ tipo: 'error', texto: 'Respuesta inesperada del servidor.' })
+            setAviso({ tipo: 'error', texto: 'Respuesta inesperada del servidor.' })
             return
           }
           setResultado(datos.resultado)
         } catch {
-          /*todo setAviso({
+          setAviso({
             tipo: 'error',
             texto: 'No se pudo conectar con el servidor. Verifique que el backend esté activo.',
-          })*/
+          })
         } finally {
           setResolviendo(false)
         }
@@ -185,7 +248,7 @@ export default function SeriesDeportivas() {
 
         <form noValidate onSubmit={resolver}>
 
-          <div className="campo" style={{paddingBottom: 25}}>
+          <div style={{paddingBottom: 25}} className='campo'>
             <label htmlFor="cap">Cantidad de juegos (1 a {MAX_JUEGOS}) </label>
             <input
               id="cap"
@@ -193,56 +256,66 @@ export default function SeriesDeportivas() {
               autoComplete="off"
               value={juegos}
               onChange={(e) => cambiarCantidad(e.target.value)}
+              disabled = {cargando || resolviendo || guardando}
             />
+            {(aviso && aviso.texto == 'Hay datos inválidos. Revise los campos marcados.'  && juegos == "") && <p className="error-msg" id="err-cap">* Este campo es obligatorio</p>}
           </div>
 
-          <div style={{paddingBottom: 25, display: "flex", flexDirection: "row", alignItems: "center"}}> {/*todo custom class*/}
-            <div className="campo">
-              <label htmlFor="cap">Probabilidad que equipo A gane si está en casa (ph)</label>
-              <input
-                id="cap"
-                inputMode="numeric"
-                autoComplete="off"
-                value={ph}
-                onChange={(e) => cambiarPH(e.target.value)}
-              />
+          <div style={{paddingBottom: 25}}>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>            
+              <div className="campo">
+                <label htmlFor="cap">Probabilidad que equipo A gane si está en casa (ph | {"0<=ph<=1"})</label>
+                <input
+                  id="cap"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={ph}
+                  onChange={(e) => cambiarPH(e.target.value)}
+                  disabled = {cargando || resolviendo || guardando}
+                />
+              </div>
+              <div className="campo" style={{paddingLeft:20}}>
+                <label htmlFor="cap">{`Probabilidad que equipo B gane si está de visita (qr): 
+                  ${ph? (ph.length > 3)? String((1-Number(ph)).toFixed(ph.length-2)) : String((1-Number(ph)).toFixed(2)): ""}`
+                }</label>
+              </div>
             </div>
-            <div className="campo" style={{paddingLeft:20}}> {/*todo custom class*/}
-              <label htmlFor="cap">{`Probabilidad que equipo B gane si está de visita (qr): 
-                ${ph? (ph.length > 3)? String((1-Number(ph)).toFixed(ph.length-2)) : String((1-Number(ph)).toFixed(2)): ""}`
-              }</label>
-            </div>
+              {(aviso && aviso.texto == 'Hay datos inválidos. Revise los campos marcados.' && ph == "") && <p className="error-msg" id="err-cap">* Este campo es obligatorio</p>}
           </div>
 
-          <div style={{paddingBottom: 25, display: "flex", flexDirection: "row", alignItems: "center"}}> {/*todo custom class*/}
-            <div className="campo">
-              <label htmlFor="cap">Probabilidad que equipo A gane si está de visita (qr)</label>
-              <input
-                id="cap"
-                inputMode="numeric"
-                autoComplete="off"
-                value={pr}
-                onChange={(e) => cambiarPR(e.target.value)}
-              />
+          <div style={{paddingBottom: 25}}>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <div className="campo">
+                <label htmlFor="cap">Probabilidad que equipo A gane si está de visita (pr | {"0<=pr<=1"})</label>
+                <input
+                  id="cap"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={pr}
+                  onChange={(e) => cambiarPR(e.target.value)}
+                  disabled = {cargando || resolviendo || guardando}
+                />
+              </div>
+              <div className="campo" style={{paddingLeft:20}}>
+                <label htmlFor="cap">{`Probabilidad que equipo B gane si está en casa (qh): 
+                  ${pr? (pr.length > 3)? String((1-Number(pr)).toFixed(pr.length-2)) : String((1-Number(pr)).toFixed(2)): ""}`
+                }</label>
+              </div>
             </div>
-            <div className="campo" style={{paddingLeft:20}}> {/*todo custom class*/}
-              <label htmlFor="cap">{`Probabilidad que equipo B gane si está en casa (qh): 
-                ${pr? (pr.length > 3)? String((1-Number(pr)).toFixed(pr.length-2)) : String((1-Number(pr)).toFixed(2)): ""}`
-              }</label>
-            </div>
+            {(aviso && aviso.texto == 'Hay datos inválidos. Revise los campos marcados.'  && pr == "") && <p className="error-msg" id="err-cap">* Este campo es obligatorio</p>}
           </div>
 
           <h2>Formato de la serie</h2>
 
-          <ul className="lista-objetos">{/*todo use my own*/}
+          <ul className="lista-objetos">
             {formato.length != 0 && (() => {
               const partidos = [];
               for (let i = 0; i < formato.length; i++) {
                 const anfitrion = formato[i]
                 partidos.push(
-                  <div key={i} className="objeto" style={{alignItems: "center"}}>{/*todo use my own*/}
+                  <div key={i} className="objeto" style={{alignItems: "center"}}>
 
-                    <h3 style={{paddingLeft:20, marginTop:10}}> {String(i+1)} </h3>{/*todo use my own*/}
+                    <h3 style={{paddingLeft:20, marginTop:10}}> {String(i+1)} </h3>
 
                     <div className="campo">
                       <label> Equipo A es: </label>
@@ -255,6 +328,7 @@ export default function SeriesDeportivas() {
                             color: anfitrion? "#FFF": "#999"
                           }}
                           onClick={() => cambiarHostJuego(i, true)}
+                          disabled = {cargando || resolviendo || guardando}
                         >
                           Anfitrion
                         </button>
@@ -287,6 +361,12 @@ export default function SeriesDeportivas() {
         </form>
       </section>
 
+      {aviso && (
+        <p className={`aviso-pagina aviso-${aviso.tipo}`} role={aviso.tipo === 'error' ? 'alert' : 'status'}>
+          {aviso.texto}
+        </p>
+      )}
+
       {(resultado.length != 0) && (
         <section className="hoja resultados" aria-label="Resultado">
           <h2>Resultado</h2>
@@ -300,5 +380,3 @@ export default function SeriesDeportivas() {
     </main>
   )
 }
-
-//todo avisar si hay problemas al resolver, cargar, guardar, formato erroneo de inputs en 1 y mas de 11, etc.

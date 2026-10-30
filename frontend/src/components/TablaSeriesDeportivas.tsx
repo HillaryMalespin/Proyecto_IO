@@ -24,7 +24,7 @@ export default function TablaSeriesDeportivas(props: {resultado: number[][]}) {
                         const fila = [];
                         for (let i = 0; i < resultado.length; i++){
                           if(j == resultado.length-1 && i == resultado.length-1){
-                            fila.push(<th scope="row" key=""></th>)
+                            fila.push(<th scope="row" key="" style={{backgroundColor:"#000"}}></th>)
                           }
                           else{
                               fila.push(<th scope="row" key={Number(resultado[i][j]).toFixed(4)}>{Number(resultado[i][j]).toFixed(4)}</th>)

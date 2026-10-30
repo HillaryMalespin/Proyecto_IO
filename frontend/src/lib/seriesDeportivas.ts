@@ -5,9 +5,9 @@ export const MAX_JUEGOS = 11
 
 //Datos del formulario
 export interface ProblemaForm {
-  juegos: number
-  ph: number
-  pr: number
+  juegos: string
+  ph: string
+  pr: string
   formato: boolean[]
 }
 
@@ -15,6 +15,15 @@ export interface ProblemaForm {
 export interface Problema {
   ph: number
   pr: number
+  formato: boolean[]
+}
+
+//Datos del problema a manejar como el .json
+export interface ProblemaObjeto {
+  algoritmo: string
+  juegos: string
+  ph: string
+  pr: string
   formato: boolean[]
 }
 
@@ -37,14 +46,6 @@ export interface Errores {
   general?: string
   objetos: ErroresObjeto[]
 }
-
-//todo validar si hay ph pr y juegos
-export const formularioVacio = (): ProblemaForm => ({
-  juegos: 7,
-  ph: 0.5,
-  pr: 0.5,
-  formato: [true, true, true, true, true]
-})
 
 // ---------- Validacion campo por campo (devuelven el mensaje o undefined) ----------
 
@@ -128,12 +129,12 @@ export function primerError(e: Errores): string {
 
 // ---------- Archivos .json ----------
 
-export const aJson = (p: Problema): string => JSON.stringify(p, null, 2)
+export const aJson = (p: ProblemaObjeto): string => JSON.stringify(p, null, 2)
 
-export type ResultadoCarga = { ok: true; formulario: ProblemaForm } | { ok: false; error: string }
+export type ResultadoCarga = { ok: true; formulario: ProblemaForm; fallback: false} | { ok: true; formulario: ProblemaForm; fallback: true; error: string } | { ok: false; error: string } 
 
 // Nunca lanza excepciones: cualquier problema vuelve como { ok: false, error }
-/*export function cargarArchivo(texto: string): ResultadoCarga {
+export function cargarArchivo(texto: string): ResultadoCarga {
   let datos: unknown
   try {
     datos = JSON.parse(texto)
@@ -145,33 +146,107 @@ export type ResultadoCarga = { ok: true; formulario: ProblemaForm } | { ok: fals
   }
   const d = datos as Record<string, unknown>
 
-  if (d.algoritmo !== undefined && d.algoritmo !== 'mochila') {
+  if (d.algoritmo !== undefined && d.algoritmo !== 'series-deportivas') {
+    return { ok: false, error: 'El archivo no corresponde al problema de series deportivas.' }
+  }
+
+  if (d.ph !== undefined && !( !isNaN(Number(d.ph)) )) {//si d.juegos viene y no es un numero entero
     return { ok: false, error: 'El archivo no corresponde al problema de la mochila.' }
   }
-  if (!Array.isArray(d.objetos)) {
-    return { ok: false, error: 'Falta la lista "objetos".' }
+
+  var problema = false
+
+  var valorJuegos = ""
+  var valorPH = ""
+  var valorPR = ""
+  var valorFormato = [] as boolean[]
+
+  if (d.juegos !== undefined && !isNaN(Number(d.juegos)) && Number.isInteger(Number(d.juegos))) {//si juegos viene y no es un numero entero
+    if (Number(d.juegos) > MAX_JUEGOS){
+      problema=true
+      valorJuegos = String(MAX_JUEGOS)
+    }
+    else if (Number(d.juegos) < 1){
+      problema=true
+      valorJuegos = "1"
+    }
+    else {
+      valorJuegos = String(d.juegos)
+    }
+  }
+  else {
+    problema=true
+  }
+  
+  if (d.ph !== undefined && !isNaN(Number(d.ph))) {//si ph viene y es un numero
+    if (Number(d.ph) > 1){
+      problema=true
+      valorPH = "1"
+    }
+    else if (Number(d.ph) < 0){
+      problema=true
+      valorPH = "0"
+    }
+    else {
+      valorPH = String(d.ph)
+    }
+  }
+  else {
+    problema=true
   }
 
-  // Convierto a texto lo que sea numero o string; lo demas queda vacio y la validacion lo rechaza
-  const aTexto = (x: unknown) => (typeof x === 'string' || typeof x === 'number' ? String(x) : '')
-  const formulario: ProblemaForm = {
-    variante: d.variante as Variante,
-    capacidad: aTexto(d.capacidad),
-    objetos: d.objetos.map((o) => {
-      const ob = (typeof o === 'object' && o !== null ? o : {}) as Record<string, unknown>
-      return {
-        nombre: typeof ob.nombre === 'string' ? ob.nombre : '',
-        peso: aTexto(ob.peso),
-        valor: aTexto(ob.valor),
-        cantidad: aTexto(ob.cantidad),
+  if (d.pr !== undefined && !isNaN(Number(d.pr))) {//si ph viene y es un numero
+    if (Number(d.pr) > 1){
+      problema=true
+      valorPR = "1"
+    }
+    else if (Number(d.pr) < 0){
+      problema=true
+      valorPR = "0"
+    }
+    else {
+      valorPR = String(d.pr)
+    }
+  }
+  else {
+    problema=true
+  }
+
+  if (d.formato !== undefined && Array.isArray(d.formato)){//si el formato viene y es array
+    const largoJson = d.formato.length
+
+    for (let i = 0; i < Number(valorJuegos); i++){//para cada juego
+      if (largoJson-1 >= i && typeof d.formato[i] == "boolean"){//si aun quedan elementos en la lista y son boolean
+        valorFormato.push(d.formato[i])// insertelo
       }
-    }),
+      else {//si no, rellene por defecto
+        problema = true
+        valorFormato.push(true)
+      }
+    }
+  }
+  else {//si no, rellene por defecto
+    problema=true
+
+    for (let i = 0; i < Number(valorJuegos); i++){//para cada juego
+      problema = true
+      valorFormato.push(true)
+    }
   }
 
-  // Reutilizo la misma validacion del formulario
-  const { errores, problema } = validarFormulario(formulario)
-  if (!problema) return { ok: false, error: primerError(errores) }
-  return { ok: true, formulario }
-}*/
+  const formulario: ProblemaForm = {
+    //si juegos viene y es un numero entero
+    juegos: valorJuegos,
+
+    ph: valorPH,
+
+    pr: valorPR,
+
+    formato: valorFormato
+  }
+
+  if (problema) return { ok: true, formulario, fallback: true, error: 'Se sustituyeron por defecto los valores erróneos del archivo.' }
+  return { ok: true, formulario, fallback: false}
+}
 
 export const formatear = (n: number): string => String(Math.round(n * 10000) / 10000)
