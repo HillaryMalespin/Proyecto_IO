@@ -135,6 +135,28 @@ y la pantalla completa).
 ## Series Deportivas
 
 
+### Ejemplos JSON de Series Deportivas
+El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
+formato (`cantidad` solo se usa en la variante acotada). Si el archivo no se logra leer, se muestra un aviso. El programa automáticamente corrije datos erróneos a valores por defectos, en cuyo caso se muestra un aviso. Hay archivos de ejemplo en `ejemplos/series-deportivas/`.
+
+```json
+{
+  "algoritmo": "series-deportivas",
+  "juegos": 7,
+  "ph": 0.6,
+  "pr": 0.4,
+  "formato": [
+    true,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false
+  ]
+}
+```
+Este ejemplo da una probabilidad inicial de que A gane de 0.4680.
 
 ## Árboles Binarios de Búsqueda Óptimos
 
