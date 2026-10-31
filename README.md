@@ -8,7 +8,7 @@ consumen por API REST.
 - Oscar Andrés Bezara Pérez – 2024075088
 - Hillary Malespín Ulloa - 2021106074
 - Fabián José Flores Alvarado – 2024089309
-- ...
+- Adrián José Umaña Solano - carné
 
 ## Requisitos
 - Node.js 22 LTS o superior
@@ -143,11 +143,11 @@ el algoritmo.
 ### Entrada
 
 Desde la interfaz gráfica, se insertan los siguientes datos:
-* Cantidad de juegos en la serie. (números enteros entre 1 y 11, el valor por defecto es vacío)
-* Probabilidad de que A gane. Se deben insertar por aparte tanto en caso que sea anfitrión como visitante. (números entre 0 y 1, el valor por defecto es vacío)
+* Cantidad de juegos en la serie. (número enteros positivos entre 1 y 11, el valor por defecto es vacío)
+* Probabilidad de que A gane. Se deben insertar por aparte tanto en caso que sea anfitrión como visitante. (números positivos entre 0 y 1, el valor por defecto es vacío)
 * Formato de los juegos, osea si A es anfitrión ó visitante para cada juego. (el valor por defecto es A siendo anfitrión)
 
-Además, se cuentan con botones para cargar/descargar archivos json (descrito más abajo), y un botón para resolver el algoritmo cuando se inserten los números
+Además, se cuentan con botones para cargar/descargar archivos json (descrito más abajo), y un botón para resolver el algoritmo una vez se inserten los valores.
 
 ### Salida
 
@@ -157,7 +157,7 @@ Si los valores de entrada son incorrectos, ó sucede un error durante el proceso
 
 ### Ejemplo JSON de Series Deportivas
 El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
-formato (`cantidad` solo se usa en la variante acotada). Si el archivo no se logra leer, se muestra un aviso. El programa automáticamente corrije datos erróneos a valores por defectos, en cuyo caso se muestra un aviso. Hay archivos de ejemplo en `ejemplos/series-deportivas/`.
+formato. Si el archivo no se logra leer, se muestra un aviso. El programa automáticamente corrije datos erróneos a valores por defectos, en cuyo caso se muestra un aviso. Hay archivos de ejemplo en `ejemplos/series-deportivas/`.
 
 ```json
 {
@@ -180,11 +180,99 @@ Este ejemplo da una probabilidad inicial de que A gane de 0.4680.
 
 ## Árboles Binarios de Búsqueda Óptimos
 
+Resuelve el problema de ABB óptimos por programación dinámica.
 
+El algoritmo se ejecuta en el backend (`POST /api/abb-optimo`, archivo
+`backend/app/algorithms/ABB.py`) y los datos son validados antes de ejecutar el algoritmo. La opción se abre desde el menú principal, con un tooltip que describe
+el algoritmo.
+
+### Entrada
+
+Desde la interfaz gráfica, se insertan los siguientes datos para cada nodo del árbol:
+* Llave, el valor o etiqueta en sí del nodo. (Hilera de texto)
+* Peso. Se deben insertar por aparte tanto en caso que sea anfitrión como visitante. (números enteros positivos)
+
+Además, se cuentan con botones para cargar/descargar archivos json (descrito más abajo), y un botón para resolver el algoritmo una vez se inserten los valores.
+
+### Salida
+
+Cuando se selecciona "resolver", si los datos están completos y correctos, se ejecuta el algoritmo sobre los datos de entrada, y se despliega una tabla mostrando las probabilidades de cada nodo, ordenados por llave, el árbol óptimo, y las tablas de cálculos de costos.
+
+Si los valores de entrada son incorrectos, ó sucede un error durante el proceso, se mostrará un mensaje indicando el problema.
+
+### Ejemplo JSON de Series Deportivas
+El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
+formato. Si el archivo no se logra leer, se muestra un aviso. Hay archivos de ejemplo en `ejemplos/abb/`.
+
+```json
+{
+  "algoritmo": "abb-optimo",
+  "llaves": [
+    {
+      "llave": "Praga",
+      "peso": 2023
+    },
+    {
+      "llave": "New York",
+      "peso": 8504
+    },
+    {
+      "llave": "San José",
+      "peso": 3100
+    },
+    {
+      "llave": "París",
+      "peso": 2025
+    },
+    {
+      "llave": "Atenas",
+      "peso": 6617
+    }
+  ]
+}
+```
+Este ejemplo da un costo de 1.8482.
 
 ## Multiplicación de Matrices
 
+Resuelve el problema de multiplicación de matrices por programación dinámica.
 
+El algoritmo se ejecuta en el backend (`POST /api/matrices`, archivo
+`backend/app/algorithms/matrices.py`) y los datos son validados antes de ejecutar el algoritmo. La opción se abre desde el menú principal, con un tooltip que describe
+el algoritmo.
+
+### Entrada
+
+Desde la interfaz gráfica, se insertan los siguientes datos:
+* Cantidad de matrices. (Número entero positivo)
+* d-subN, corresponde al valor n-esimo de la lista de tamaños de matrices. (números enteros positivos)
+
+Además, se cuentan con botones para cargar/descargar archivos json (descrito más abajo), y un botón para resolver el algoritmo una vez se inserten los valores.
+
+### Salida
+
+Cuando se selecciona "resolver", si los datos están completos y correctos, se ejecuta el algoritmo sobre los datos de entrada, y se despliegan las tablas M y P.
+
+Si los valores de entrada son incorrectos, ó sucede un error durante el proceso, se mostrará un mensaje indicando el problema.
+
+### Ejemplo JSON de Series Deportivas
+El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
+formato. Si el archivo no se logra leer, se muestra un aviso. Hay archivos de ejemplo en `ejemplos/matrices/`.
+
+```json
+{
+  "algoritmo": "multiplicacion-matrices",
+  "dimensiones": [
+    10,
+    20,
+    50,
+    1,
+    100
+  ]
+}
+
+```
+Este ejemplo da un costo de 2200.
 
 ## Problema de la Mochila
 
