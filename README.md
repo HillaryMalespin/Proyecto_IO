@@ -8,7 +8,7 @@ consumen por API REST.
 - Oscar Andrés Bezara Pérez – 2024075088
 - Hillary Malespín Ulloa - 2021106074
 - Fabián José Flores Alvarado – 2024089309
-- Adrián José Umaña Solano - carné
+- Adrián José Umaña Solano - 202062118
 
 ## Requisitos
 - Node.js 22 LTS o superior
@@ -180,7 +180,13 @@ Este ejemplo da una probabilidad inicial de que A gane de 0.4680.
 
 ## Árboles Binarios de Búsqueda Óptimos
 
-Resuelve el problema de ABB óptimos por programación dinámica.
+Este algoritmo arma el árbol binario de búsqueda con el menor costo de búsqueda esperado. Las llaves que más se buscan quedan más cerca de la raíz.
+
+**Recibe:** una lista de llaves (texto) con su peso (entero mayor que 0, por ejemplo cantidad de consultas). Tiene que haber al menos 1 llave y no se pueden repetir. No importa el orden, se ordenan solas.
+
+**Devuelve:** las llaves ordenadas, sus probabilidades, las tablas P (costos) y R (raíces), y el árbol final.
+
+**Cómo lo hace:** convierte los pesos en probabilidades, llena las tablas P y R con programación dinámica (en empate gana el `k` menor) y después arma el árbol desde `R[1][n]`.
 
 El algoritmo se ejecuta en el backend (`POST /api/abb-optimo`, archivo
 `backend/app/algorithms/ABB.py`) y los datos son validados antes de ejecutar el algoritmo. La opción se abre desde el menú principal, con un tooltip que describe
@@ -235,7 +241,7 @@ Este ejemplo da un costo de 1.8482.
 
 ## Multiplicación de Matrices
 
-Resuelve el problema de multiplicación de matrices por programación dinámica.
+Este algoritmo encuentra la forma más barata de multiplicar una cadena de matrices, es decir, dónde poner los paréntesis para hacer la menor cantidad de operaciones. Usa programación dinámica: llena la tabla M con el costo mínimo de cada grupo de matrices y la tabla P con el mejor punto para partirlo, y con eso arma la hilera final, por ejemplo `((A₁ (A₂ A₃)) A₄)`. Se pueden usar entre 2 y 10 matrices y se ingresan como n + 1 dimensiones enteras positivas, porque las columnas de cada matriz tienen que coincidir con las filas de la siguiente.
 
 El algoritmo se ejecuta en el backend (`POST /api/matrices`, archivo
 `backend/app/algorithms/matrices.py`) y los datos son validados antes de ejecutar el algoritmo. La opción se abre desde el menú principal, con un tooltip que describe
