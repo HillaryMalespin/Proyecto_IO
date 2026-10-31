@@ -1,0 +1,17 @@
+{
+  "algoritmo": "abb-optimo",
+  "llaves": [
+    {
+      "llave": "Brasil",
+      "peso": 15
+    },
+    {
+      "llave": "Chile",
+      "peso": 25
+    },
+    {
+      "llave": "Brasil",
+      "peso": 10
+    }
+  ]
+}

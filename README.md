@@ -200,9 +200,28 @@ se trabajó archivo por archivo y fue revisado y probado por la integrante respo
 
 **Series Deportivas:** Herramienta(s): ... Tareas: ... Partes del código: ...
 
-**Árboles Binarios de Búsqueda Óptimos:** Herramienta(s): ... Tareas: ... Partes del código: ...
+**Árboles Binarios de Búsqueda Óptimos:**
 
-**Multiplicación de Matrices:** Herramienta(s): ... Tareas: ... Partes del código: ...
+Herramientas:
+- GitHub Copilot
+Tareas:
+- Implementacion de la interfaz grafica de Arboles Binarios para la visualizacion grafica de la estructura del arbol y para representar la misma estetica del resto de la pagina
+- Creacion de pruebas automatizadas (npm test)
+Partes del código:
+- `frontend/src/components/ArbolABB.tsx`
+- `frontend/src/components/ArbolABB.test.tsx`
+- `frontend/src/components/TablaABB.test.tsx`
+- `frontend/src/lib/abb.test.ts`
+
+**Multiplicación de Matrices:** 
+- GitHub Copilot
+Tareas:
+- Implementacion de la interfaz grafica de Multiplicacion de Matrices para representar la misma estetica del resto de la pagina
+- Creacion de pruebas automatizadas (npm test)
+Partes del código:
+- `frontend/src/pages/Matrices.tsx`
+- `frontend/src/pages/Matrices.test.tsx`
+- `frontend/src/lib/matrices.test.ts`
 
 **Problema de la Mochila:** Herramienta(s): Claude (Anthropic). Tareas: diseño y
 escritura del algoritmo, la validación de datos, la página y la tabla del frontend,
