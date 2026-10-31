@@ -188,7 +188,7 @@ ejercicios resueltos y contra fuerza bruta, y rechazo de datos inválidos) y en
 Se usaron herramientas de inteligencia artificial. Cada integrante completa el renglón
 de su problema: herramienta, tareas y partes del código.
 
-**Reemplazo de Equipos:** Herramienta(s): Claude (Anthropic). Tareas: La pantalla, la tabla de análisis y el visor de planes del frontend, los estilos, los archivos de ejemplo, las pruebas automáticas y la ayuda para resolver errores de integración (conflictos
+**Reemplazo de Equipos:** Herramienta(s): Claude (Anthropic). Tareas: La pantalla, la tabla de análisis y el visor de planes del frontend, los estilos y la ayuda para resolver errores de integración (conflictos
 de Git, rutas de importación, pruebas del CI, algunos errores del backend). Partes del código:
 (Parcialmente cuando presentaba errores me ayudaba a resolver los problemas)`backend/app/algorithms/reemplazo.py`
 `backend/app/errores.py`, el registro del router en `backend/app/main.py`, (parte del diseño del frontend)
