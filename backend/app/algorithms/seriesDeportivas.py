@@ -97,7 +97,7 @@ def adaptarFormato(formato):
     ordenLocalidad = [1]
 
     ultimoAnfitrion = formato[0]
-    for juego in formato[1:(len(formato)-1)]:
+    for juego in formato[1:(len(formato))]:
         if ultimoAnfitrion == juego:
             ordenLocalidad[-1]+=1
         else:
