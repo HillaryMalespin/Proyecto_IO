@@ -6,6 +6,7 @@ consumen por API REST.
 
 ## Integrantes
 - Oscar Andrés Bezara Pérez – 2024075088
+- Hillary Malespín Ulloa - 2021106074
 - Nombre Apellido – carné
 - ...
 
@@ -73,6 +74,62 @@ de su problema.
 
 ## Reemplazo de Equipos
 
+Resuelve el problema de reemplazo de equipos por programación dinámica. El usuario
+ingresa el costo inicial del equipo, el plazo del proyecto (entero de 1 a 30), la vida
+útil del equipo (entero de 1 a 10) y, para cada año de uso, el precio de reventa y el
+costo de mantenimiento (números no negativos). La aplicación muestra la tabla de
+análisis de cada período, con G(t), las alternativas evaluadas y los instantes de los
+siguientes reemplazos, y despliega uno a uno todos los planes óptimos de reemplazo
+(hay varios cuando existen empates), con una línea de tiempo y el detalle de cada
+equipo. El algoritmo se ejecuta en el backend (`POST /api/reemplazo-equipos`, archivo
+`backend/app/algorithms/reemplazo.py`) y los datos se validan tanto en la interfaz como
+en el servidor. La opción se abre desde el menú principal, con un tooltip que describe
+el algoritmo.
+
+### Cómo funciona
+G(t) es el costo mínimo desde el instante t hasta el final del proyecto (n), comprando
+un equipo nuevo en t. Se calcula de atrás hacia adelante:
+
+- G(n) = 0
+- G(t) = mínimo, para k de 1 a min(vida útil, n − t), de C(t, t+k) + G(t+k)
+- C(t, t+k) = costo inicial + mantenimiento acumulado de k años − reventa del año k
+
+La respuesta es G(0). Los siguientes reemplazos de cada instante son todos los
+instantes que alcanzan el mínimo; si hay empates, existen varios planes óptimos. El
+cálculo usa `Decimal` para que los empates se detecten sin errores de redondeo. Si hay
+más de 500 planes óptimos se muestran los primeros 500, pero la cantidad total siempre
+se calcula completa.
+
+### Ejemplos JSON de Reemplazo de Equipos
+El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
+formato. El arreglo `periodos` tiene exactamente `vidaUtil` elementos y el elemento i
+corresponde al i-ésimo año de uso del equipo. Un archivo inválido muestra un mensaje,
+nunca un error. Hay archivos de ejemplo (válidos y, en `invalidos/`, inválidos) en
+`ejemplos/reemplazo-equipos/`.
+
+```json
+{
+  "algoritmo": "reemplazo-equipos",
+  "costoInicial": 500,
+  "plazo": 5,
+  "vidaUtil": 3,
+  "periodos": [
+    { "reventa": 400, "mantenimiento": 30 },
+    { "reventa": 300, "mantenimiento": 40 },
+    { "reventa": 250, "mantenimiento": 60 }
+  ]
+}
+```
+Este ejemplo da un costo mínimo de 640 con tres planes óptimos: reemplazar en los
+instantes {1, 2}, {1, 4} o {3, 4}.
+
+### Pruebas de Reemplazo de Equipos
+Las pruebas están en `backend/tests/test_reemplazo.py` (algoritmo contra ejercicios
+resueltos y contra fuerza bruta, empates, decimales, rechazo de datos inválidos y
+verificación de los archivos de ejemplo) y en `frontend/src/lib/reemplazo.test.ts` y
+`frontend/src/pages/Reemplazo.test.tsx` (validación del formulario, carga de archivos
+y la pantalla completa).
+
 
 
 ## Series Deportivas
@@ -131,7 +188,15 @@ ejercicios resueltos y contra fuerza bruta, y rechazo de datos inválidos) y en
 Se usaron herramientas de inteligencia artificial. Cada integrante completa el renglón
 de su problema: herramienta, tareas y partes del código.
 
-**Reemplazo de Equipos:** Herramienta(s): ... Tareas: ... Partes del código: ...
+**Reemplazo de Equipos:** Herramienta(s): Claude (Anthropic). Tareas: La pantalla, la tabla de análisis y el visor de planes del frontend, los estilos, los archivos de ejemplo, las pruebas automáticas y la ayuda para resolver errores de integración (conflictos
+de Git, rutas de importación, pruebas del CI, algunos errores del backend). Partes del código:
+(Parcialmente cuando presentaba errores me ayudaba a resolver los problemas)`backend/app/algorithms/reemplazo.py`
+`backend/app/errores.py`, el registro del router en `backend/app/main.py`, (parte del diseño del frontend)
+`frontend/src/lib/reemplazo.ts`, `frontend/src/lib/api.ts`,
+`frontend/src/components/PaginaAlgoritmo.tsx`, `frontend/src/components/Campo.tsx`,
+`frontend/src/components/reemplazo/`, `frontend/src/pages/Reemplazo.tsx`,
+`frontend/src/pagina.css`, la prop `opciones` de `frontend/src/pages/Menu.tsx` y los test y algunos archivos de prueba. El código
+se trabajó archivo por archivo y fue revisado y probado por la integrante responsable.
 
 **Series Deportivas:** Herramienta(s): ... Tareas: ... Partes del código: ...
 
