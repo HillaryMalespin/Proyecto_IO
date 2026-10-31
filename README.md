@@ -7,7 +7,7 @@ consumen por API REST.
 ## Integrantes
 - Oscar Andrés Bezara Pérez – 2024075088
 - Hillary Malespín Ulloa - 2021106074
-- Nombre Apellido – carné
+- Fabián José Flores Alvarado – 2024089309
 - ...
 
 ## Requisitos
