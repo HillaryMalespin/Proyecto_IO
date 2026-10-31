@@ -1,0 +1,25 @@
+{
+  "algoritmo": "abb-optimo",
+  "llaves": [
+    {
+      "llave": "Python",
+      "peso": 40
+    },
+    {
+      "llave": "C",
+      "peso": 20
+    },
+    {
+      "llave": "Rust",
+      "peso": 10
+    },
+    {
+      "llave": "Java",
+      "peso": 25
+    },
+    {
+      "llave": "Go",
+      "peso": 5
+    }
+  ]
+}

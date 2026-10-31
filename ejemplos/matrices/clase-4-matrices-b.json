@@ -1,0 +1,10 @@
+{
+  "algoritmo": "multiplicacion-matrices",
+  "dimensiones": [
+    10,
+    20,
+    50,
+    1,
+    100
+  ]
+}
