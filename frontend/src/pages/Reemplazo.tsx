@@ -4,6 +4,7 @@ import PaginaAlgoritmo from '../components/PaginaAlgoritmo'
 import Campo from '../components/Campo'
 import TablaAnalisis from '../components/reemplazo/TablaAnalisis'
 import VisorPlanes from '../components/reemplazo/VisorPlanes'
+import { AvisoReventa, NotaGanancia } from '../components/reemplazo/Avisos'
 import { resolverReemplazo } from '../lib/api'
 import {
   EJEMPLO_ENUNCIADO,
@@ -291,6 +292,9 @@ export default function Reemplazo() {
           )}
         </section>
 
+        {/* Proyecto 1: aviso (no bloquea) si la reventa supera el costo inicial */}
+        <AvisoReventa formulario={form} />
+
         {mensaje && (
           <div
             className={`mensaje ${mensaje.tipo === 'error' ? 'mensaje-error' : ''}`}
@@ -343,6 +347,8 @@ export default function Reemplazo() {
             <p className="costo-minimo">
               Costo mínimo total: <strong>{formatear(resultado.costoMinimo)}</strong>
             </p>
+            {/* Proyecto 1: explica un costo mínimo negativo (ganancia neta) */}
+            <NotaGanancia costoMinimo={resultado.costoMinimo} />
           </section>
           <TablaAnalisis resultado={resultado} />
           <VisorPlanes key={claveResultado} resultado={resultado} />
