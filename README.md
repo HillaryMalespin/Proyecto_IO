@@ -134,8 +134,28 @@ y la pantalla completa).
 
 ## Series Deportivas
 
+Resuelve el problema de series deportivas por programación dinámica.
 
-### Ejemplos JSON de Series Deportivas
+El algoritmo se ejecuta en el backend (`POST /api/series-deportivas`, archivo
+`backend/app/algorithms/seriesDeportivas.py`) y los datos se validan en la interfaz. La opción se abre desde el menú principal, con un tooltip que describe
+el algoritmo.
+
+### Entrada
+
+Desde la interfaz gráfica, se insertan los siguientes datos:
+* Cantidad de juegos en la serie. (números enteros entre 1 y 11, el valor por defecto es vacío)
+* Probabilidad de que A gane. Se deben insertar por aparte tanto en caso que sea anfitrión como visitante. (números entre 0 y 1, el valor por defecto es vacío)
+* Formato de los juegos, osea si A es anfitrión ó visitante para cada juego. (el valor por defecto es A siendo anfitrión)
+
+Además, se cuentan con botones para cargar/descargar archivos json (descrito más abajo), y un botón para resolver el algoritmo cuando se inserten los números
+
+### Salida
+
+Cuando se selecciona "resolver", si los datos están completos, se ejecuta el algoritmo sobre los datos de entrada, y se despliega una tabla mostrando las probabilidades de ganar para el equipo A, donde las filas y columnas representan el puntaje actual en el marcador (las filas siendo el puntaje del equipo B, y las columnas, del equipo A). La casilla de más abajo a la izquierda se descarta al ser imposible que ambos equipos ganen más de la mitad de los partidos.
+
+Si los valores de entrada son incorrectos, ó sucede un error durante el proceso, se mostrará un mensaje indicando el problema.
+
+### Ejemplo JSON de Series Deportivas
 El problema se puede guardar y volver a cargar desde la interfaz con el siguiente
 formato (`cantidad` solo se usa en la variante acotada). Si el archivo no se logra leer, se muestra un aviso. El programa automáticamente corrije datos erróneos a valores por defectos, en cuyo caso se muestra un aviso. Hay archivos de ejemplo en `ejemplos/series-deportivas/`.
 

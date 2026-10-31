@@ -145,14 +145,15 @@ const cargar = async (e: ChangeEvent<HTMLInputElement>) => {
 
     if (juegos == "" || ph == "" || pr == "") {
       setAviso({ tipo: 'error', texto: 'Corrija los datos antes de guardar el archivo.' })
+      setGuardando(false)
       return
     }
 
     const problema: ProblemaObjeto = {
       algoritmo: 'series-deportivas',
-      juegos: juegos,
-      ph: ph,
-      pr: pr,
+      juegos: (juegos=="")? juegos : Number(juegos),
+      ph: (ph=="")? ph : Number(ph),
+      pr: (pr=="")? pr : Number(pr),
       formato: formato
     }
 

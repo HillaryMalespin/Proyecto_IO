@@ -20,10 +20,10 @@ export interface Problema {
 
 //Datos del problema a manejar como el .json
 export interface ProblemaObjeto {
-  algoritmo: string
-  juegos: string
-  ph: string
-  pr: string
+  algoritmo: number | string
+  juegos: number | string
+  ph: number | string
+  pr: number | string
   formato: boolean[]
 }
 
@@ -84,38 +84,6 @@ export function validarValor(t: string): string | undefined {
   if (!Number.isFinite(n) || n <= 0) return 'El valor debe ser mayor que cero.'
 }
 
-// ---------- Validacion del formulario completo ----------
-
-/*export function validarFormulario(f: ProblemaForm): { errores: Errores; problema: Problema | null } {
-  const errores: Errores = { objetos: f.objetos.map((o) => validarObjeto(o, f.variante)) }
-
-  const cap = validarCapacidad(f.cantidadJuegos)
-  if (cap) errores.cantidadJuegos = cap
-  if (f.ordenJuegos.length < 1) errores.general = 'Debe haber al menos un objeto.'
-  if (f.ordenJuegos.length > MAX_OBJETOS) errores.general = `Máximo ${MAX_OBJETOS} objetos.`
-
-  const hayErrores =
-    !!errores.capacidad || !!errores.general || errores.objetos.some((e) => Object.keys(e).length > 0)
-  if (hayErrores) return { errores, problema: null }
-
-  // Sin errores: convierto el texto a numeros
-  const problema: Problema = {
-    algoritmo: 'mochila',
-    variante: f.variante,
-    capacidad: Number(f.capacidad.trim()),
-    objetos: f.objetos.map((o) => {
-      const obj: Objeto = {
-        nombre: o.nombre.trim(),
-        peso: Number(o.peso.trim()),
-        valor: Number(o.valor.trim().replace(',', '.')),
-      }
-      if (f.variante === 'acotada') obj.cantidad = Number(o.cantidad.trim())
-      return obj
-    }),
-  }
-  return { errores, problema }
-}*/
-
 // Primer mensaje de error legible (se usa al cargar archivos)
 export function primerError(e: Errores): string {
   if (e.general) return e.general
@@ -146,12 +114,8 @@ export function cargarArchivo(texto: string): ResultadoCarga {
   }
   const d = datos as Record<string, unknown>
 
-  if (d.algoritmo !== undefined && d.algoritmo !== 'series-deportivas') {
+  if (d.algoritmo == undefined || (d.algoritmo !== undefined && d.algoritmo !== 'series-deportivas')) {
     return { ok: false, error: 'El archivo no corresponde al problema de series deportivas.' }
-  }
-
-  if (d.ph !== undefined && !( !isNaN(Number(d.ph)) )) {//si d.juegos viene y no es un numero entero
-    return { ok: false, error: 'El archivo no corresponde al problema de la mochila.' }
   }
 
   var problema = false
@@ -178,7 +142,7 @@ export function cargarArchivo(texto: string): ResultadoCarga {
     problema=true
   }
   
-  if (d.ph !== undefined && !isNaN(Number(d.ph))) {//si ph viene y es un numero
+  if (d.ph !== undefined && !isNaN(Number(d.ph)) && String(d.ph) != "true" && String(d.ph) != "false") {//si ph viene y es un numero
     if (Number(d.ph) > 1){
       problema=true
       valorPH = "1"
@@ -195,7 +159,7 @@ export function cargarArchivo(texto: string): ResultadoCarga {
     problema=true
   }
 
-  if (d.pr !== undefined && !isNaN(Number(d.pr))) {//si ph viene y es un numero
+  if (d.pr !== undefined && !isNaN(Number(d.pr)) && String(d.pr) != "true" && String(d.pr) != "false") {//si ph viene y es un numero
     if (Number(d.pr) > 1){
       problema=true
       valorPR = "1"

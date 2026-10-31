@@ -1,0 +1,12 @@
+{
+  "algoritmo": "series-deportivas",
+  "juegos": 50,
+  "ph": true,
+  "pr": -0.4,
+  "formato": [
+    "pollo",
+    false,
+    true,
+    true,
+  ]
+}
